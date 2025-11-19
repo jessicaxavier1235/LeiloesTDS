@@ -1,8 +1,7 @@
 
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-
-
 
 /**
  *
@@ -128,12 +127,25 @@ public class listagemVIEW extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnVenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVenderActionPerformed
-        String id = id_produto_venda.getText();
-        
-        ProdutosDAO produtosdao = new ProdutosDAO();
-        
-        //produtosdao.venderProduto(Integer.parseInt(id));
-        listarProdutos();
+        try {
+            String idTexto = id_produto_venda.getText().trim();
+
+            if (idTexto.equals("")) {
+                JOptionPane.showMessageDialog(null, "Informe o ID do produto!");
+                return;
+            }
+
+            int id = Integer.parseInt(idTexto);
+
+            ProdutosDAO dao = new ProdutosDAO();
+            dao.venderProduto(id);
+
+            listarProdutos();
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Erro ao vender: " + e.getMessage());
+        }
+
     }//GEN-LAST:event_btnVenderActionPerformed
 
     private void btnVendasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVendasActionPerformed
@@ -144,8 +156,6 @@ public class listagemVIEW extends javax.swing.JFrame {
     private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
         this.dispose();
     }//GEN-LAST:event_btnVoltarActionPerformed
-
-  
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -161,16 +171,16 @@ public class listagemVIEW extends javax.swing.JFrame {
     private javax.swing.JTable listaProdutos;
     // End of variables declaration//GEN-END:variables
 
-    private void listarProdutos(){
+    private void listarProdutos() {
         try {
             ProdutosDAO produtosdao = new ProdutosDAO();
-            
+
             DefaultTableModel model = (DefaultTableModel) listaProdutos.getModel();
             model.setNumRows(0);
-            
+
             ArrayList<ProdutosDTO> listagem = produtosdao.listarProdutos();
-            
-            for(int i = 0; i < listagem.size(); i++){
+
+            for (int i = 0; i < listagem.size(); i++) {
                 model.addRow(new Object[]{
                     listagem.get(i).getId(),
                     listagem.get(i).getNome(),
@@ -180,6 +190,6 @@ public class listagemVIEW extends javax.swing.JFrame {
             }
         } catch (Exception e) {
         }
-    
+
     }
 }
